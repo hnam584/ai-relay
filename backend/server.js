@@ -152,7 +152,7 @@ app.post("/api/chat", checkAuth, async (req, res) => {
 
   // Cho phép hủy kết nối tới Router nếu người dùng bấm Hủy (Cancel/Stop) hoặc ngắt tab
   const abortController = new AbortController();
-  req.on("close", () => {
+  res.on("close", () => {
     if (!res.writableEnded) {
       abortController.abort();
     }
