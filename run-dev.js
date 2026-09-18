@@ -3,16 +3,16 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const isWin = process.platform === "win32";
-const npmCmd = isWin ? "npm.cmd" : "npm";
 
 console.log("\x1b[36m%s\x1b[0m", "=================================================");
 console.log("\x1b[36m%s\x1b[0m", "       ⚡ AI RELAY — Khởi động hệ thống          ");
 console.log("\x1b[36m%s\x1b[0m", "=================================================");
 
-function startProcess(name, cmd, args, cwd, color) {
-  const proc = spawn(cmd, args, {
+function startProcess(name, fullCommand, cwd, color) {
+  // Trên Windows, gọi npm bắt buộc dùng shell: true
+  const proc = spawn(fullCommand, {
     cwd,
+    shell: true,
     stdio: ["pipe", "pipe", "pipe"],
     env: process.env,
   });
@@ -47,8 +47,7 @@ function startProcess(name, cmd, args, cwd, color) {
 // Khởi chạy Backend trên cổng 8787
 const backendProc = startProcess(
   "Backend",
-  npmCmd,
-  ["run", "dev"],
+  "npm run dev",
   path.join(__dirname, "backend"),
   "\x1b[33m" // Màu vàng
 );
@@ -56,8 +55,7 @@ const backendProc = startProcess(
 // Khởi chạy Frontend trên cổng 5173
 const frontendProc = startProcess(
   "Frontend",
-  npmCmd,
-  ["run", "dev"],
+  "npm run dev",
   path.join(__dirname, "frontend"),
   "\x1b[32m" // Màu xanh lá
 );
